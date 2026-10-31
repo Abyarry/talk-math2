@@ -1,0 +1,1301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Talk Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EAF6FF; --dot:#D3E9FB; --card:#FFFFFF; --ink:#1E2A4A; --soft:#5B6785; --line:#CFE3F5;
+  --sun:#FFC531; --sun-ink:#1E2A4A; --grape:#6E4FF0; --grape-ink:#FFFFFF; --chip:#F2EEFF;
+  --mint:#2EC4B6; --pink:#FF5FA2;
+  --good:#138A52; --good-bg:#DDF7EA; --bad:#C8303A; --bad-bg:#FFE4E6; --try:#8A5A00; --try-bg:#FFF3D1;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121A2E; --dot:#1A2440; --card:#1C2742; --ink:#EEF3FF; --soft:#A9B5D3; --line:#2C3A5E;
+    --sun:#FFC94A; --sun-ink:#121A2E; --grape:#9C85FF; --grape-ink:#121A2E; --chip:#2A2550;
+    --mint:#46D9CB; --pink:#FF7DB4;
+    --good:#4FD18F; --good-bg:#123826; --bad:#FF7A82; --bad-bg:#3D1A20; --try:#FFD27A; --try-bg:#3A2E10;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121A2E; --dot:#1A2440; --card:#1C2742; --ink:#EEF3FF; --soft:#A9B5D3; --line:#2C3A5E;
+  --sun:#FFC94A; --sun-ink:#121A2E; --grape:#9C85FF; --grape-ink:#121A2E; --chip:#2A2550;
+  --mint:#46D9CB; --pink:#FF7DB4;
+  --good:#4FD18F; --good-bg:#123826; --bad:#FF7A82; --bad-bg:#3D1A20; --try:#FFD27A; --try-bg:#3A2E10;
+  color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+body{margin:0;min-height:100%;background-color:var(--bg);color:var(--ink);
+  background-image:radial-gradient(var(--dot) 2px,transparent 2.5px);background-size:28px 28px;
+  font-family:"Fredoka",ui-rounded,"Arial Rounded MT Bold","Segoe UI",system-ui,-apple-system,sans-serif;
+  font-size:18px;line-height:1.4;-webkit-tap-highlight-color:transparent}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+main{max-width:560px;margin:0 auto;padding:16px 16px 32px}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--grape);outline-offset:3px}
+button:disabled{opacity:.45;cursor:default}
+
+.top{display:flex;align-items:center;gap:12px;margin:4px 0 16px}
+.logo{font-size:42px;line-height:1}
+.top h1{margin:0;font-size:32px;font-weight:700;letter-spacing:-.5px}
+.top p{margin:0;color:var(--soft);font-size:16px}
+
+.card{background:var(--card);border-radius:28px;padding:20px;border:2px solid var(--line)}
+h2{font-size:20px;font-weight:600;margin:4px 0 12px}
+
+.grades{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px}
+.grade{background:var(--chip);border-radius:20px;padding:12px 6px;display:flex;flex-direction:column;align-items:center;border:3px solid transparent}
+.grade b{font-size:34px;font-weight:700;line-height:1.1}
+.grade span{font-size:14px;color:var(--soft)}
+.grade[aria-checked="true"],.level[aria-checked="true"],.seg button[aria-pressed="true"]{border-color:var(--grape);background:var(--card)}
+
+.levels{display:grid;gap:10px;margin-bottom:22px}
+.level{background:var(--chip);border-radius:20px;padding:12px 16px;display:flex;align-items:center;gap:14px;text-align:left;border:3px solid transparent}
+.level .em{font-size:34px}
+.level b{display:block;font-size:20px;font-weight:600}
+.level span{font-size:15px;color:var(--soft)}
+
+.seg{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.seg button{flex:1;min-width:90px;background:var(--chip);border-radius:16px;padding:10px 8px;font-weight:500;border:3px solid transparent;display:flex;flex-direction:column;align-items:center}
+.seg button small{font-size:13px;color:var(--soft);font-weight:400}
+.goals button{padding:12px 6px}
+.goals .em{font-size:26px}
+
+.more{background:var(--chip);border-radius:20px;padding:4px 14px;margin:4px 0 8px}
+.more summary{cursor:pointer;padding:10px 0;font-weight:500}
+.more[open]{padding-bottom:14px}
+.mini{margin:4px 0 8px;font-size:15px;color:var(--soft)}
+.field{display:flex;flex-direction:column;gap:6px;font-size:15px;color:var(--soft);margin-bottom:12px}
+select{font:inherit;font-size:16px;padding:12px;border-radius:14px;border:2px solid var(--line);background:var(--card);color:var(--ink);max-width:100%}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+
+.big{width:100%;background:var(--grape);color:var(--grape-ink);font-size:22px;font-weight:600;border-radius:22px;padding:16px;margin-top:10px}
+.ghost{background:var(--chip);border-radius:16px;padding:12px 16px;font-weight:500}
+.wide{width:100%;margin-top:10px}
+.small{font-size:16px;padding:10px 14px}
+.link{color:var(--grape);text-decoration:underline;font-size:16px;padding:8px;margin:4px auto 0;display:block}
+.note{font-size:15px;color:var(--soft);margin:12px 0 0}
+.record{font-size:16px;color:var(--soft);margin:12px 0 0;text-align:center}
+
+.bar{display:flex;justify-content:space-between;align-items:center;font-weight:500;color:var(--soft);margin-bottom:8px}
+.pills{display:flex;gap:6px}
+.pill{background:var(--card);border:2px solid var(--line);border-radius:999px;padding:2px 12px;color:var(--ink);font-weight:600;display:inline-block}
+.bump{animation:bump .5s ease}
+@keyframes bump{40%{transform:scale(1.35)}}
+.progress{height:10px;border-radius:10px;background:var(--line);overflow:hidden;margin-bottom:14px}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--grape));transition:width .4s}
+
+.qcard{text-align:center;padding:18px 16px 20px;position:relative}
+.tag{display:inline-block;font-size:14px;color:var(--soft);background:var(--chip);border-radius:999px;padding:2px 12px;margin-bottom:10px}
+.visual{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;font-size:34px;line-height:1.1;margin-bottom:12px;max-width:100%}
+.visual .op{font-size:34px;font-weight:700;color:var(--soft);margin:0 6px}
+.visual .grp{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;max-width:100%}
+.visual .gone{opacity:.25;position:relative}
+.visual .gone::after{content:"";position:absolute;left:-2px;right:-2px;top:50%;height:4px;background:var(--bad);transform:rotate(-30deg);border-radius:2px}
+.qtext{font-size:clamp(44px,14vw,68px);font-weight:700;letter-spacing:-1px;line-height:1.1;margin-bottom:14px;overflow-wrap:anywhere}
+.qtext.long{font-size:22px;font-weight:500;letter-spacing:0;line-height:1.45}
+.qcard.win{animation:win .6s ease}
+@keyframes win{30%{transform:scale(1.04) rotate(-1deg);border-color:var(--sun)}60%{transform:scale(1.02) rotate(1deg)}}
+
+.clock{margin:14px 2px 4px}
+.track{position:relative;height:34px;border-radius:999px;background:var(--card);border:2px solid var(--line);overflow:visible}
+.track .fill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:999px;background:linear-gradient(90deg,var(--mint),var(--sun))}
+.track.over .fill{background:var(--try-bg)}
+.track .flag{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:20px}
+.rocket{position:absolute;top:50%;transform:translateY(-50%);font-size:24px;left:0;line-height:1}
+.clock-text{display:flex;justify-content:space-between;font-size:15px;color:var(--soft);margin-top:4px}
+.clock-text b{color:var(--ink);font-weight:600}
+
+.talk{display:flex;align-items:flex-start;gap:10px;margin:14px 0}
+.owl{font-size:44px;line-height:1;display:inline-block;transform-origin:50% 100%}
+.owl.hop{animation:hop .8s ease}
+.owl.tilt{animation:tilt .8s ease}
+@keyframes hop{20%{transform:translateY(-18px) rotate(-8deg)}40%{transform:translateY(0)}60%{transform:translateY(-10px) rotate(8deg)}80%{transform:translateY(0)}}
+@keyframes tilt{30%{transform:rotate(-14deg)}70%{transform:rotate(10deg)}}
+.bubble{flex:1;min-height:52px;background:var(--card);border:2px solid var(--line);border-radius:20px 20px 20px 6px;padding:10px 14px;font-size:20px}
+.bubble:empty::before{content:"…";color:var(--soft)}
+
+.feedback{border-radius:22px;padding:14px 18px;margin-bottom:12px}
+.feedback.good{background:var(--good-bg);color:var(--good)}
+.feedback.bad{background:var(--bad-bg);color:var(--ink)}
+.feedback.try{background:var(--try-bg);color:var(--try)}
+.fb-title{margin:0;font-size:22px;font-weight:600}
+.feedback.bad .fb-title{color:var(--bad)}
+.speedchip{display:inline-block;margin-top:8px;background:var(--card);color:var(--ink);border-radius:999px;padding:4px 12px;font-size:16px;font-weight:500}
+.feedback ol{margin:10px 0 0;padding-left:22px}
+.feedback li{margin:4px 0}
+
+.heard{text-align:center;color:var(--soft);min-height:24px;font-size:16px}
+.mic{width:100%;min-height:96px;border-radius:48px;background:var(--sun);color:var(--sun-ink);display:flex;align-items:center;justify-content:center;gap:12px;font-size:22px;font-weight:600;padding:12px 20px}
+.mic-ico{font-size:40px}
+.mic.listening{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--sun) 70%,transparent)}50%{box-shadow:0 0 0 14px color-mix(in srgb,var(--sun) 0%,transparent)}}
+
+.pad{margin-top:10px}
+.pad-show{background:var(--card);border:2px solid var(--line);border-radius:18px;text-align:center;font-size:40px;font-weight:700;min-height:64px;padding:4px;margin-bottom:10px}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.keys button{background:var(--card);border:2px solid var(--line);border-radius:16px;font-size:28px;font-weight:600;padding:10px 0}
+.keys .ok{background:var(--grape);color:var(--grape-ink);border-color:var(--grape)}
+
+#done{text-align:center}
+.trophy{font-size:76px;line-height:1.1}
+#doneText{font-size:20px;margin-top:0}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 4px}
+.tile{background:var(--chip);border-radius:20px;padding:12px 8px}
+.tile .em{font-size:28px;display:block}
+.tile b{display:block;font-size:26px;font-weight:700}
+.tile span{font-size:14px;color:var(--soft)}
+.badge{display:inline-block;background:var(--sun);color:var(--sun-ink);border-radius:999px;padding:6px 16px;font-weight:600;font-size:18px}
+
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:22px}
+.acts button{background:var(--chip);border-radius:18px;padding:12px 6px;border:3px solid transparent;display:flex;flex-direction:column;align-items:center;font-weight:500}
+.acts button .em{font-size:28px}
+.acts button small{font-size:13px;color:var(--soft);font-weight:400;text-align:center}
+.acts button[aria-pressed="true"]{border-color:var(--grape);background:var(--card)}
+.trace{margin:4px 0 12px}
+.trace canvas{display:block;width:100%;height:300px;border-radius:22px;background:var(--chip);touch-action:none;cursor:crosshair}
+.trace .row{justify-content:center;margin-top:10px}
+.tip{font-size:15px;color:var(--soft);margin:12px 0 0;background:var(--chip);border-radius:16px;padding:10px 14px}
+.tip:empty{display:none}
+.qbtns{justify-content:center}
+button.pill{cursor:pointer;font-weight:600}
+.visual.small{font-size:24px;margin-bottom:6px}
+@media (prefers-reduced-motion:reduce){
+  .mic.listening{animation:none;outline:4px solid var(--grape)}
+  .progress i{transition:none}
+  .owl.hop,.owl.tilt,.qcard.win,.bump{animation:none}
+}
+</style>
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+<main>
+  <header class="top">
+    <div class="logo" aria-hidden="true">🦉</div>
+    <div><h1>Talk Math</h1><p>Listen, think, and say your answer out loud.</p></div>
+  </header>
+
+  <section id="setup" class="card">
+    <h2>Pick your grade</h2>
+    <div class="grades" role="radiogroup" aria-label="Grade" id="grades"></div>
+    <h2>Pick your skill level</h2>
+    <div class="levels" role="radiogroup" aria-label="Skill level" id="levels"></div>
+    <h2>How do you want to practice?</h2>
+    <div class="acts" id="acts"></div>
+    <h2 id="goalHead">Pick your speed goal</h2>
+    <div class="seg goals" id="goals"></div>
+    <details class="more">
+      <summary>Voice and sound</summary>
+      <p class="mini">How fast should I talk?</p>
+      <div class="seg" id="speeds">
+        <button data-rate="0.65">Extra slow</button>
+        <button data-rate="0.8">Slow</button>
+        <button data-rate="0.95">Normal</button>
+      </div>
+      <label class="field" id="voiceField">Voice
+        <select id="voice"></select>
+      </label>
+      <div class="row">
+        <button id="testVoice" class="ghost small">🔊 Hear my voice</button>
+        <button id="soundBtn" class="ghost small"></button>
+        <button id="autoBtn" class="ghost small"></button>
+      </div>
+    </details>
+    <p class="tip" id="voiceTip"></p>
+    <p class="record" id="recordNote"></p>
+    <button id="start" class="big">Start practice</button>
+    <p class="note" id="supportNote"></p>
+  </section>
+
+  <section id="play" hidden>
+    <div class="bar"><span id="qnum"></span><span class="pills"><button id="restart" class="pill" aria-label="Start this quiz over">↺</button><span id="streak" class="pill" hidden></span><span id="stars" class="pill"></span></span></div>
+    <div class="progress"><i id="prog"></i></div>
+    <div class="card qcard" id="qcard">
+      <div class="tag" id="levelTag"></div>
+      <div id="visual" class="visual" aria-hidden="true"></div>
+      <div id="qtext" class="qtext"></div>
+      <div id="trace" class="trace" hidden>
+        <canvas id="traceCv" aria-label="Tracing area: follow the path with your finger"></canvas>
+        <div class="row"><button id="showMe" class="ghost small">👀 Show me</button><button id="clearTrace" class="ghost small">🧽 Start again</button></div>
+      </div>
+      <div class="row qbtns"><button id="repeat" class="ghost small">🔊 Say it again</button><button id="redo" class="ghost small" hidden>🔁 Do this one again</button></div>
+    </div>
+    <div class="clock" id="clock" aria-hidden="true">
+      <div class="track" id="track"><div class="fill" id="fill"></div><span class="flag">🏁</span><span id="rocket" class="rocket">🚀</span></div>
+      <div class="clock-text"><span>⏱ <b id="clockText">0.0s</b></span><span id="goalText"></span></div>
+    </div>
+    <div class="talk"><span id="owl" class="owl" aria-hidden="true">🦉</span><div id="caption" class="bubble" aria-live="polite"></div></div>
+    <div id="feedback" class="feedback" hidden></div>
+    <div id="heard" class="heard"></div>
+    <button id="mic" class="mic"><span class="mic-ico" aria-hidden="true">🎤</span><span id="micLabel">Tap and say your answer</span></button>
+    <button id="typeToggle" class="link">Type the answer instead</button>
+    <div id="pad" class="pad" hidden>
+      <div id="padShow" class="pad-show" aria-live="polite"></div>
+      <div class="keys" id="keys"></div>
+    </div>
+    <button id="next" class="big" hidden>Next question</button>
+  </section>
+
+  <section id="done" class="card" hidden>
+    <div class="trophy" aria-hidden="true">🏆</div>
+    <h2 id="doneTitle"></h2>
+    <p id="doneText"></p>
+    <span class="badge" id="speedBadge"></span>
+    <div class="tiles" id="tiles"></div>
+    <p class="record" id="doneRecord"></p>
+    <button id="levelUp" class="big" hidden></button>
+    <button id="practice" class="big" hidden></button>
+    <button id="again" class="ghost wide">🔁 Repeat this quiz</button>
+    <button id="newQuiz" class="ghost wide">✨ New quiz</button>
+    <button id="changeGrade" class="ghost wide">Change grade or level</button>
+  </section>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const ROUND = 10;
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const hasTTS = 'speechSynthesis' in window;
+const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const store = {
+  get(k){ try { return localStorage.getItem('talkmath:' + k); } catch(e){ return null; } },
+  set(k, v){ try { localStorage.setItem('talkmath:' + k, v); } catch(e){} }
+};
+
+const state = {
+  grade: store.get('grade') || 'K', level: parseInt(store.get('level'), 10) || 1, goal: store.get('goal') || 'quick', activity: store.get('activity') || 'mix', traced: 0,
+  autoListen: store.get('auto') !== 'off', echo: false, base: ROUND, fixed: 0, missed: [], lastSpecs: [], extras: 0, practice: false, waitStart: 0, nudged: false, misheard: 0,
+  rate: parseFloat(store.get('rate')) || 0.8, sound: store.get('sound') !== 'off', voice: null,
+  qs: [], i: 0, score: 0, streak: 0, bestStreak: 0, times: [], goalsMet: 0,
+  tries: 0, answered: false, timing: false, speaking: false, listening: false, micBlocked: !SR
+};
+
+const LEVELS = [
+  { n: 1, em: '🌱', name: 'Starter', desc: 'Smaller numbers to warm up' },
+  { n: 2, em: '🚀', name: 'Explorer', desc: 'Bigger numbers' },
+  { n: 3, em: '🏆', name: 'Champion', desc: 'The toughest questions' }
+];
+const ACTS = [
+  { id: 'say', em: '🗣️', name: 'Talk', desc: 'Say the answers' },
+  { id: 'trace', em: '✏️', name: 'Trace', desc: 'Write numbers' },
+  { id: 'mix', em: '🎲', name: 'Mix', desc: 'Talk and trace' }
+];
+const GOALS = [
+  { id: 'relaxed', em: '🐢', name: 'Relaxed', mult: 1.5 },
+  { id: 'quick', em: '🚀', name: 'Quick', mult: 1 },
+  { id: 'speedy', em: '⚡', name: 'Speedy', mult: 0.6 }
+];
+const BASE = { K: [6, 7, 8], 1: [5, 6, 7], 2: [6, 8, 10], 3: [4, 5, 6], 4: [6, 8, 10], 5: [8, 10, 12] };
+const goalFor = (g, L, id) => Math.max(2, Math.round(BASE[g][L - 1] * GOALS.find(x => x.id === id).mult));
+const goalSec = () => goalFor(state.grade, state.level, state.goal);
+
+/* ---------- Sound effects ---------- */
+let AC = null, master = null, noise = null;
+function audio(){
+  if (!AC){
+    const A = window.AudioContext || window.webkitAudioContext; if (!A) return null;
+    AC = new A(); master = AC.createGain(); master.gain.value = 0.7;
+    const comp = AC.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 6;
+    master.connect(comp); comp.connect(AC.destination);
+    noise = AC.createBuffer(1, AC.sampleRate, AC.sampleRate);
+    const d = noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  }
+  if (AC.state === 'suspended') AC.resume();
+  return AC;
+}
+function clapAt(t, vol){
+  const src = AC.createBufferSource(); src.buffer = noise;
+  const bp = AC.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1000 + Math.random() * 900; bp.Q.value = 1.4;
+  const g = AC.createGain();
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.004);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.08 + Math.random() * 0.05);
+  src.connect(bp).connect(g).connect(master);
+  src.start(t, Math.random() * 0.8, 0.16);
+}
+function applause(dur = 1.4, people = 8){
+  if (!state.sound || !audio()) return;
+  const now = AC.currentTime + 0.02;
+  for (let p = 0; p < people; p++){
+    const period = 0.2 + Math.random() * 0.08; let t = now + Math.random() * 0.15;
+    while (t < now + dur){
+      const fade = 1 - (t - now) / dur;
+      clapAt(t + (Math.random() - 0.5) * 0.02, 0.35 * fade + 0.05);
+      t += period * (0.9 + Math.random() * 0.2);
+    }
+  }
+}
+function tone(freq, t, len, type, vol){
+  const o = AC.createOscillator(), g = AC.createGain(); o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+  o.connect(g).connect(master); o.start(t); o.stop(t + len + 0.05);
+}
+function chime(big){
+  if (!state.sound || !audio()) return;
+  const t = AC.currentTime + 0.01, notes = big ? [523.25, 659.25, 783.99, 1046.5, 1318.5] : [523.25, 659.25, 783.99, 1046.5];
+  notes.forEach((f, i) => { tone(f, t + i * 0.09, 0.45, 'triangle', 0.22); tone(f * 2, t + i * 0.09, 0.2, 'sine', 0.05); });
+  for (let i = 0; i < 6; i++) tone(2000 + Math.random() * 2500, t + 0.35 + i * 0.06, 0.15, 'sine', 0.04);
+}
+function boop(){
+  if (!state.sound || !audio()) return;
+  const t = AC.currentTime + 0.01; tone(440, t, 0.25, 'sine', 0.15); tone(349, t + 0.18, 0.35, 'sine', 0.15);
+}
+
+/* Exciting sounds that play with every glitter burst */
+function ping(freq, t, len, vol, panVal){
+  const o = AC.createOscillator(), g = AC.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(freq, t);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.005); g.gain.exponentialRampToValueAtTime(0.0001, t + len);
+  o.connect(g); let out = g;
+  if (AC.createStereoPanner){ const p = AC.createStereoPanner(); p.pan.value = panVal; g.connect(p); out = p; }
+  out.connect(master); o.start(t); o.stop(t + len + 0.05);
+}
+function partyPop(t){
+  const src = AC.createBufferSource(); src.buffer = noise;
+  const hp = AC.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 600;
+  const g = AC.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.9, t + 0.003); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+  src.connect(hp).connect(g).connect(master); src.start(t, Math.random() * 0.5, 0.15);
+  const o = AC.createOscillator(), og = AC.createGain(); o.type = 'triangle';
+  o.frequency.setValueAtTime(900, t); o.frequency.exponentialRampToValueAtTime(140, t + 0.12);
+  og.gain.setValueAtTime(0.35, t); og.gain.exponentialRampToValueAtTime(0.0001, t + 0.15);
+  o.connect(og).connect(master); o.start(t); o.stop(t + 0.2);
+}
+function whoosh(t, dur){
+  const src = AC.createBufferSource(); src.buffer = noise;
+  const bp = AC.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 2;
+  bp.frequency.setValueAtTime(400, t); bp.frequency.exponentialRampToValueAtTime(5000, t + dur);
+  const g = AC.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.35, t + dur * 0.4); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  src.connect(bp).connect(g).connect(master); src.start(t, 0, dur + 0.05);
+}
+function zipUp(t){
+  const o = AC.createOscillator(), g = AC.createGain(); o.type = 'sine';
+  o.frequency.setValueAtTime(500, t); o.frequency.exponentialRampToValueAtTime(2200, t + 0.35);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.18, t + 0.05); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
+  o.connect(g).connect(master); o.start(t); o.stop(t + 0.45);
+}
+function fanfare(t){
+  const brass = (f, st, len, vol) => {
+    const o = AC.createOscillator(), lp = AC.createBiquadFilter(), g = AC.createGain(); o.type = 'sawtooth'; o.frequency.value = f;
+    lp.type = 'lowpass'; lp.frequency.setValueAtTime(900, st); lp.frequency.linearRampToValueAtTime(2600, st + 0.08);
+    g.gain.setValueAtTime(0.0001, st); g.gain.exponentialRampToValueAtTime(vol, st + 0.03);
+    g.gain.setValueAtTime(vol, st + len - 0.06); g.gain.exponentialRampToValueAtTime(0.0001, st + len);
+    o.connect(lp).connect(g).connect(master); o.start(st); o.stop(st + len + 0.05);
+  };
+  [[392, 0, 0.12], [392, 0.14, 0.12], [392, 0.28, 0.12], [523.25, 0.42, 0.7]].forEach(([f, d, l]) => brass(f, t + d, l, 0.09));
+  [659.25, 783.99].forEach(f => brass(f, t + 0.42, 0.7, 0.06));
+}
+function glitterSounds(power = 1){
+  if (!state.sound || !audio()) return;
+  const t = AC.currentTime + 0.01;
+  partyPop(t); whoosh(t + 0.02, 0.45);
+  if (power > 1.1) zipUp(t + 0.05);
+  if (power > 1.5){ partyPop(t + 0.18); fanfare(t + 0.25); }
+  const n = Math.round(22 * power), span = 1.6 * Math.min(power, 1.8);
+  const notes = [1046.5, 1174.7, 1318.5, 1568, 1760, 2093, 2349.3, 2637, 3136];
+  for (let i = 0; i < n; i++){
+    const at = t + 0.12 + Math.pow(Math.random(), 1.6) * span;
+    ping(pick(notes) * (Math.random() < 0.3 ? 2 : 1), at, 0.18 + Math.random() * 0.25, 0.05 + Math.random() * 0.05, Math.random() * 1.6 - 0.8);
+  }
+}
+
+/* ---------- Glitter and confetti ---------- */
+const fx = { cv: $('fx'), ctx: $('fx').getContext('2d'), parts: [], running: false };
+const FX_COLORS = ['#FFC531', '#FF5FA2', '#6E4FF0', '#2EC4B6', '#FF7A45', '#7BD389', '#FFFFFF', '#9C85FF'];
+function sizeFx(){ const d = window.devicePixelRatio || 1; fx.cv.width = innerWidth * d; fx.cv.height = innerHeight * d; fx.ctx.setTransform(d, 0, 0, d, 0, 0); }
+function burst(power = 1, from){
+  sizeFx(); glitterSounds(power);
+  const r = (from || $('qcard')).getBoundingClientRect();
+  const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  const n = reduceMotion ? 24 : Math.round(110 * power);
+  for (let i = 0; i < n; i++){
+    const ang = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.3, sp = (5 + Math.random() * 9) * (reduceMotion ? 0 : Math.min(power, 1.4));
+    fx.parts.push({ x: cx + (Math.random() - 0.5) * 60, y: cy, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp,
+      kind: i % 3 === 0 ? 'spark' : 'conf', size: 4 + Math.random() * 6, rot: Math.random() * 6, vr: (Math.random() - 0.5) * 0.4,
+      color: pick(FX_COLORS), life: 0, max: 80 + Math.random() * 70, tw: Math.random() * 6 });
+  }
+  if (power > 1.2 && !reduceMotion){
+    for (let i = 0; i < 90; i++) fx.parts.push({ x: Math.random() * innerWidth, y: -20 - Math.random() * 200, vx: (Math.random() - 0.5) * 1.5, vy: 1 + Math.random() * 2,
+      kind: i % 2 ? 'spark' : 'conf', size: 3 + Math.random() * 5, rot: Math.random() * 6, vr: (Math.random() - 0.5) * 0.3,
+      color: pick(FX_COLORS), life: 0, max: 170 + Math.random() * 80, tw: Math.random() * 6, float: true });
+  }
+  if (!fx.running){ fx.running = true; requestAnimationFrame(fxLoop); }
+}
+function drawSpark(c, x, y, s){
+  c.beginPath(); c.moveTo(x, y - s); c.quadraticCurveTo(x, y, x + s, y); c.quadraticCurveTo(x, y, x, y + s);
+  c.quadraticCurveTo(x, y, x - s, y); c.quadraticCurveTo(x, y, x, y - s); c.fill();
+}
+function fxLoop(){
+  const c = fx.ctx; c.clearRect(0, 0, innerWidth, innerHeight);
+  fx.parts = fx.parts.filter(p => p.life < p.max && p.y < innerHeight + 40);
+  for (const p of fx.parts){
+    p.life++; p.vy += p.float ? 0.01 : 0.22; p.vx *= 0.985; p.x += p.vx + (p.float ? Math.sin(p.life / 12) * 0.6 : 0); p.y += p.vy; p.rot += p.vr;
+    const a = Math.min(1, (p.max - p.life) / 30); c.globalAlpha = a; c.fillStyle = p.color;
+    if (p.kind === 'spark'){
+      const s = p.size * (0.6 + 0.5 * Math.abs(Math.sin(p.life / 5 + p.tw)));
+      c.shadowColor = p.color; c.shadowBlur = 12; drawSpark(c, p.x, p.y, s * 1.4); c.shadowBlur = 0;
+    } else {
+      c.save(); c.translate(p.x, p.y); c.rotate(p.rot); c.scale(1, Math.cos(p.life / 6 + p.tw)); c.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2); c.restore();
+    }
+  }
+  c.globalAlpha = 1;
+  if (fx.parts.length) requestAnimationFrame(fxLoop); else { fx.running = false; c.clearRect(0, 0, innerWidth, innerHeight); }
+}
+function animate(el, cls){ el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); }
+
+/* ---------- Speaking ---------- */
+let voices = [];
+/* Prefer warm, natural-sounding female voices; skip novelty voices */
+const FEMALE = /\b(aria|jenny|ava|emma|michelle|ana|sonia|libby|maisie|natasha|clara|ezinne|leah|samantha|karen|moira|tessa|serena|fiona|victoria|allison|susan|zira|hazel|catherine|martha|kate|nicky|zoe|joanna|salli|kimberly|ivy|kendra|amy|olivia|veena|neerja|luna|nancy|jane|sara|ashley|cora|elizabeth|monica|amber|isla|molly|hayley|female)\b/i;
+const MALE = /\b(guy|ryan|daniel|david|mark|george|alex|fred|tom|oliver|arthur|aaron|rishi|eric|christopher|roger|steffan|andrew|brian|william|thomas|male|james|liam|davis|tony|jason|brandon|jacob|ravi|prabhat|gordon|lee|reed|eddy|abeo|connor|mitchell|ken|matthew|joey|justin|kevin|russell|geraint)\b/i;
+const NOVELTY = /bad news|good news|bells|boing|bubbles|cellos|jester|organ|superstar|trinoids|whisper|wobble|zarvox|albert|bahh|junior|kathy|ralph|deranged|hysterical|grandma|grandpa|rocko|shelley|flo\b|sandy/i;
+const isNatural = v => !!v && /natural|neural|premium|enhanced|online/i.test(v.name);
+const prettyName = v => `${v.name.replace(/^(Microsoft|Google|Apple)\s+/i, '').replace(/\s*-\s*English.*$/i, '').replace(/\s*Online \(Natural\)/i, ' (natural)')} · ${v.lang}`;
+function voiceScore(v){
+  const n = v.name; let s = 0;
+  if (FEMALE.test(n) || /google us english$/i.test(n)) s += 10;
+  if (MALE.test(n)) s -= 15;
+  if (isNatural(v)) s += 8;
+  if (/google/i.test(n)) s += 2;
+  if (v.lang && navigator.language && v.lang.toLowerCase() === navigator.language.toLowerCase()) s += 1;
+  return s;
+}
+function updateVoiceTip(){
+  const tip = $('voiceTip');
+  tip.textContent = !hasTTS || isNatural(state.voice) ? '' :
+    'Tip: for a warmer, more human lady’s voice, open this page in Microsoft Edge (try Ava, Jenny or the Nigerian voice Ezinne). On iPhone or iPad, download a Premium voice such as Ava in Settings › Accessibility › Spoken Content › Voices.';
+}
+function loadVoices(){
+  if (!hasTTS) return;
+  voices = speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang) && !NOVELTY.test(v.name)).sort((a, b) => voiceScore(b) - voiceScore(a));
+  const sel = $('voice'); sel.innerHTML = '';
+  voices.forEach((v, i) => { const o = document.createElement('option'); o.value = i; o.textContent = `${isNatural(v) ? '⭐ ' : ''}${prettyName(v)}`; sel.append(o); });
+  const saved = store.get('voice2');
+  let idx = voices.findIndex(v => v.name === saved); if (idx < 0) idx = 0;
+  if (voices.length){ sel.value = idx; state.voice = voices[idx]; }
+  $('voiceField').hidden = voices.length < 2;
+  updateVoiceTip();
+}
+
+let sayToken = 0;
+function say(lines){
+  return new Promise(resolve => {
+    const token = ++sayToken;
+    abortRec();
+    if (!hasTTS){ $('caption').textContent = lines.join(' '); resolve(true); queueListen(); return; }
+    speechSynthesis.cancel();
+    state.speaking = true; updateMic();
+    let k = 0;
+    const nextLine = () => {
+      if (token !== sayToken){ resolve(false); return; }
+      if (k >= lines.length){ state.speaking = false; updateMic(); resolve(true); queueListen(); return; }
+      const line = lines[k++];
+      $('caption').textContent = line;
+      const u = new SpeechSynthesisUtterance(line);
+      u.rate = state.rate; u.pitch = 1;
+      if (state.voice){ u.voice = state.voice; u.lang = state.voice.lang; } else u.lang = 'en-US';
+      let done = false;
+      const fin = () => { if (done) return; done = true; setTimeout(nextLine, 500); };
+      u.onend = fin; u.onerror = fin;
+      setTimeout(fin, 1800 + line.length * 170 / state.rate);
+      speechSynthesis.speak(u);
+    };
+    nextLine();
+  });
+}
+function stopTalking(){ sayToken++; if (hasTTS) speechSynthesis.cancel(); state.speaking = false; }
+
+/* ---------- Answer clock ---------- */
+const timer = { acc: 0, start: null, raf: 0 };
+function timerRun(){ if (timer.start !== null) return; timer.start = performance.now(); cancelAnimationFrame(timer.raf); tick(); }
+function timerPause(){ if (timer.start !== null){ timer.acc += performance.now() - timer.start; timer.start = null; } }
+function timerReset(){ timer.acc = 0; timer.start = null; drawClock(); }
+function timerSec(at){ return (timer.acc + (timer.start !== null ? (at || performance.now()) - timer.start : 0)) / 1000; }
+function tick(){ drawClock(); if (timer.start !== null) timer.raf = requestAnimationFrame(tick); }
+function drawClock(){
+  const s = timerSec(), g = goalSec(), pct = Math.min(1, s / g);
+  $('clockText').textContent = `${s.toFixed(1)}s`;
+  $('fill').style.width = `${pct * 100}%`;
+  $('rocket').style.left = `calc(${pct * 100}% - ${pct * 30}px)`;
+  const over = s > g; $('track').classList.toggle('over', over);
+  $('goalText').textContent = over ? 'Take your time, keep thinking' : `Goal: ${g}s`;
+}
+function speedRating(t, g){
+  if (t <= g * 0.5) return { em: '⚡', name: 'Lightning fast', met: true };
+  if (t <= g) return { em: '🚀', name: 'Beat the clock', met: true };
+  if (t <= g * 1.6) return { em: '🐢', name: 'Steady', met: false };
+  return { em: '🧠', name: 'Careful thinker', met: false };
+}
+
+/* ---------- Hearing numbers ---------- */
+const UNITS = {zero:0,oh:0,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,
+  thirteen:13,fourteen:14,fifteen:15,sixteen:16,seventeen:17,eighteen:18,nineteen:19};
+const TENS = {twenty:20,thirty:30,forty:40,fourty:40,fifty:50,sixty:60,seventy:70,eighty:80,ninety:90};
+const SOUNDS = {won:'one',to:'two',too:'two',tu:'two',for:'four',fore:'four',ate:'eight',tree:'three',free:'three',sicks:'six'};
+function parseNumber(text){
+  const toks = text.toLowerCase().replace(/(\d),(\d)/g, '$1$2').replace(/-/g, ' ').replace(/[^a-z0-9 ]/g, ' ').split(/\s+/).filter(Boolean);
+  const found = []; let cur = 0, total = 0, on = false, lastUnit = false;
+  const flush = () => { if (on) found.push(total + cur); cur = 0; total = 0; on = false; lastUnit = false; };
+  for (let w of toks){
+    if (/^\d+$/.test(w)){ flush(); found.push(parseInt(w, 10)); continue; }
+    if (SOUNDS[w]) w = SOUNDS[w];
+    if (w in UNITS){ if (lastUnit) flush(); cur += UNITS[w]; on = true; lastUnit = true; continue; }
+    if (w in TENS){ if (on && cur % 100 !== 0) flush(); cur += TENS[w]; on = true; lastUnit = false; continue; }
+    if (w === 'hundred'){ cur = (on ? cur : 1) * 100; on = true; lastUnit = false; continue; }
+    if (w === 'thousand'){ total += (on ? cur : 1) * 1000; cur = 0; on = true; lastUnit = false; continue; }
+    if (w === 'and' && on) continue;
+    flush();
+  }
+  flush();
+  return found.length ? found[found.length - 1] : null;
+}
+
+/* ---------- Explanations ---------- */
+function parts(x){ const p = []; const h = Math.floor(x / 100) * 100, t = Math.floor((x % 100) / 10) * 10, o = x % 10;
+  if (h) p.push(h); if (t) p.push(t); if (o) p.push(o); return p; }
+const tens = k => k === 1 ? '1 ten' : `${k} tens`;
+const ones = k => k === 1 ? '1 one' : `${k} ones`;
+
+function explainAdd(a, b){
+  const n = a + b, big = Math.max(a, b), sm = Math.min(a, b);
+  if (sm === 0) return [`Adding 0 keeps the number the same.`, `So ${a} plus ${b} is ${n}.`];
+  if (sm <= 4 && big <= 20){
+    const s = []; for (let i = 1; i <= sm; i++) s.push(big + i);
+    return [`Start at the bigger number, ${big}.`, `Now count on ${sm} more.`, `${s.join(', ')}.`, `So ${a} plus ${b} is ${n}.`];
+  }
+  if (big < 10){
+    const need = 10 - big, rest = sm - need;
+    if (rest === 0) return [`${big} and ${sm} are a pair that makes exactly 10.`, `So ${a} plus ${b} is ${n}.`];
+    return [`Let’s make a ten.`, `${big} needs ${need} more to make 10.`, `Take ${need} from the ${sm}. That leaves ${rest}.`, `10 plus ${rest} is ${n}.`, `So ${a} plus ${b} is ${n}.`];
+  }
+  if (sm < 10){
+    const o = big % 10;
+    if (o === 0) return [`${big} has ${tens(big / 10)} and no ones.`, `Add ${sm} ones and we get ${n}.`, `So ${a} plus ${b} is ${n}.`];
+    if (o + sm < 10) return [`Look at the ones. ${big} has ${ones(o)}.`, `${o} plus ${sm} is ${o + sm}.`, `So ${a} plus ${b} is ${n}.`];
+    const need = 10 - o, up = big + need, rest = sm - need;
+    if (rest === 0) return [`${big} plus ${sm} takes us to the next ten.`, `So ${a} plus ${b} is ${n}.`];
+    return [`Let’s jump to the next ten.`, `${big} plus ${need} is ${up}.`, `We still have ${rest} more to add.`, `${up} plus ${rest} is ${n}.`, `So ${a} plus ${b} is ${n}.`];
+  }
+  const p = parts(sm), L = [`Start with ${big}. Add ${sm} in parts: ${p.join(' and ')}.`];
+  let c = big; for (const x of p){ L.push(`${c} plus ${x} is ${c + x}.`); c += x; }
+  L.push(`So ${a} plus ${b} is ${n}.`); return L;
+}
+
+function explainSub(a, b){
+  const n = a - b;
+  if (b === 0) return [`Taking away 0 leaves the same number.`, `So ${a} minus 0 is ${a}.`];
+  if (b === a) return [`When we take away everything, nothing is left.`, `So ${a} minus ${b} is 0.`];
+  if (b <= 5 && a <= 20){
+    const s = []; for (let i = 1; i <= b; i++) s.push(a - i);
+    return [`Start at ${a} and count back ${b}.`, `${s.join(', ')}.`, `So ${a} minus ${b} is ${n}.`];
+  }
+  if (b < 10){
+    const o = a % 10;
+    if (o >= b) return [`Look at the ones. ${a} has ${ones(o)}.`, `${o} minus ${b} is ${o - b}.`, `So ${a} minus ${b} is ${n}.`];
+    if (a === 10) return [`Think: ${b} plus what makes 10?`, `${b} plus ${10 - b} is 10.`, `So 10 minus ${b} is ${n}.`];
+    if (o === 0) return [`Split ${a} into ${a - 10} and 10.`, `10 minus ${b} is ${10 - b}.`, `${a - 10} plus ${10 - b} is ${n}.`, `So ${a} minus ${b} is ${n}.`];
+    return [`Let’s jump back to a ten first.`, `${a} minus ${o} is ${a - o}.`, `We still need to take away ${b - o} more.`, `${a - o} minus ${b - o} is ${n}.`, `So ${a} minus ${b} is ${n}.`];
+  }
+  const p = parts(b), L = [`Start with ${a}. Take away ${b} in parts: ${p.join(' and ')}.`];
+  let c = a; for (const x of p){ L.push(`${c} minus ${x} is ${c - x}.`); c -= x; }
+  L.push(`So ${a} minus ${b} is ${n}.`); return L;
+}
+
+function explainMul(a, b){
+  const n = a * b, g = Math.min(a, b), s = Math.max(a, b);
+  if (g === 0) return [`Any number times 0 is 0.`, `So ${a} times ${b} is 0.`];
+  if (g === 1) return [`Any number times 1 stays the same.`, `So ${a} times ${b} is ${n}.`];
+  if (b === 10 || b === 100 || a === 10 || a === 100){
+    const m = (b === 10 || b === 100) ? b : a, other = m === b ? a : b;
+    return [`When we multiply by ${m}, we put ${m === 10 ? 'one zero' : 'two zeros'} on the end.`, `${other} becomes ${n}.`, `So ${a} times ${b} is ${n}.`];
+  }
+  if (s <= 12 && g <= 5){
+    const seq = []; for (let i = 1; i <= g; i++) seq.push(s * i);
+    return [`${a} times ${b} is the same as ${g} groups of ${s}.`, `Let’s skip count by ${s}.`, `${seq.join(', ')}.`, `So ${a} times ${b} is ${n}.`];
+  }
+  if (s <= 12){
+    return [`Let’s split ${g} into 5 and ${g - 5}.`, `5 times ${s} is ${5 * s}.`, `${g - 5} times ${s} is ${(g - 5) * s}.`,
+      `Add them together. ${5 * s} plus ${(g - 5) * s} is ${n}.`, `So ${a} times ${b} is ${n}.`];
+  }
+  const t = s - s % 10, o = s % 10;
+  if (o === 0) return [`${t / 10} times ${g} is ${(t / 10) * g}.`, `${s} is ${t / 10} tens, so we put a zero on the end: ${n}.`, `So ${a} times ${b} is ${n}.`];
+  return [`Let’s split ${s} into ${t} and ${o}.`, `${t} times ${g} is ${t * g}.`, `${o} times ${g} is ${o * g}.`,
+    `Add them together. ${t * g} plus ${o * g} is ${n}.`, `So ${a} times ${b} is ${n}.`];
+}
+
+function explainDiv(a, b){
+  const q = a / b, L = [`${a} divided by ${b} means sharing ${a} into ${b} equal groups.`];
+  if (q <= 10 && b <= 5){
+    const seq = []; for (let i = 1; i <= q; i++) seq.push(b * i);
+    L.push(`Skip count by ${b} until you reach ${a}.`, `${seq.join(', ')}.`, `That is ${q} jumps.`);
+  } else if (q <= 12){
+    L.push(`Ask yourself: ${b} times what makes ${a}?`, `${b} times ${q} is ${a}.`);
+  } else {
+    const t = q - q % 10, o = q % 10;
+    if (o === 0) L.push(`${b} times ${t / 10} is ${b * t / 10}, so ${b} times ${t} is ${a}.`);
+    else L.push(`Split ${a} into ${b * t} and ${b * o}.`, `${b * t} divided by ${b} is ${t}.`, `${b * o} divided by ${b} is ${o}.`, `${t} plus ${o} is ${q}.`);
+  }
+  L.push(`So ${a} divided by ${b} is ${q}.`); return L;
+}
+
+/* ---------- Question makers ---------- */
+const THINGS = [['apples','🍎'],['balls','⚽'],['stars','⭐'],['fish','🐟'],['cars','🚗'],['flowers','🌸'],['ducks','🦆']];
+const NAMES = ['Ada','Tunde','Mia','Leo','Zara','Sam','Kemi','Noah','Amara','Ben'];
+
+function add(a, b, dots){ const n = a + b;
+  return { show: `${a} + ${b}`, ask: [`What is ${a} plus ${b}?`], answer: n, sayAnswer: `${a} plus ${b} is ${n}.`,
+    explain: () => explainAdd(a, b), visual: dots ? { type: 'add', a, b, e: pick(THINGS)[1] } : null }; }
+function sub(a, b, dots){ const n = a - b;
+  return { show: `${a} − ${b}`, ask: [`What is ${a} minus ${b}?`], answer: n, sayAnswer: `${a} minus ${b} is ${n}.`,
+    explain: () => explainSub(a, b), visual: dots ? { type: 'sub', a, b, e: pick(THINGS)[1] } : null }; }
+function mul(a, b){ const n = a * b;
+  return { show: `${a} × ${b}`, ask: [`What is ${a} times ${b}?`], answer: n, sayAnswer: `${a} times ${b} is ${n}.`, explain: () => explainMul(a, b) }; }
+function div(b, q){ const a = b * q;
+  return { show: `${a} ÷ ${b}`, ask: [`What is ${a} divided by ${b}?`], answer: q, sayAnswer: `${a} divided by ${b} is ${q}.`, explain: () => explainDiv(a, b) }; }
+function count(n){ const [w, e] = pick(THINGS); const s = []; for (let i = 1; i <= n; i++) s.push(i);
+  return { show: 'How many?', ask: [`How many ${w} can you see?`, `Count them carefully.`], answer: n, sayAnswer: `There are ${n} ${w}.`,
+    explain: () => [`Let’s count them together. Touch each one as we count.`, `${s.join(', ')}.`, `There are ${n} ${w}.`], visual: { type: 'count', a: n, e } }; }
+function after(n){ return { show: `${n}, ?`, ask: [`What number comes right after ${n}?`], answer: n + 1, sayAnswer: `${n + 1} comes right after ${n}.`,
+    explain: () => [`When we count, we say ${n}, and then ${n + 1}.`, `So the number after ${n} is ${n + 1}.`] }; }
+function before(n){ return { show: `?, ${n}`, ask: [`What number comes just before ${n}?`], answer: n - 1, sayAnswer: `${n - 1} comes just before ${n}.`,
+    explain: () => [`When we count, we say ${n - 1}, and then ${n}.`, `So the number before ${n} is ${n - 1}.`] }; }
+function tenMore(n){ const t = Math.floor(n / 10), o = n % 10;
+  return { show: `10 more than ${n}`, long: true, ask: [`What is 10 more than ${n}?`], answer: n + 10, sayAnswer: `10 more than ${n} is ${n + 10}.`,
+    explain: () => [`10 more means one more ten.`, `${n} has ${tens(t)} and ${ones(o)}.`, `One more ten makes ${tens(t + 1)} and ${ones(o)}.`, `So 10 more than ${n} is ${n + 10}.`] }; }
+function half(n){ const h = n / 2; let t = Math.floor(n / 10) * 10; if ((t / 10) % 2) t -= 10; const o = n - t;
+  return { show: `Half of ${n}`, long: true, ask: [`What is half of ${n}?`], answer: h, sayAnswer: `Half of ${n} is ${h}.`,
+    explain: () => t ? [`Half means two equal parts.`, `Let’s split ${n} into ${t} and ${o}.`, `Half of ${t} is ${t / 2}.`, `Half of ${o} is ${o / 2}.`, `${t / 2} plus ${o / 2} is ${h}.`, `So half of ${n} is ${h}.`]
+                    : [`Half means two equal parts.`, `${h} plus ${h} is ${n}.`, `So half of ${n} is ${h}.`] }; }
+function orderOps(a, b, c){ const n = a + b * c;
+  return { show: `${a} + ${b} × ${c}`, ask: [`What is ${a} plus ${b} times ${c}?`, `Remember, multiply before you add.`], answer: n, sayAnswer: `${a} plus ${b} times ${c} is ${n}.`,
+    explain: () => [`We always multiply before we add.`, `${b} times ${c} is ${b * c}.`, `Then ${a} plus ${b * c} is ${n}.`, `So the answer is ${n}.`] }; }
+function wordAdd(a, b){ const nm = pick(NAMES), [w] = pick(THINGS), n = a + b;
+  return { ...add(a, b), long: true, show: `${nm} has ${a} ${w}. ${nm} gets ${b} more. How many now?`,
+    ask: [`${nm} has ${a} ${w}.`, `${nm} gets ${b} more.`, `How many ${w} does ${nm} have now?`], sayAnswer: `${nm} has ${n} ${w} now.`,
+    explain: () => [`Getting more means we add.`, ...explainAdd(a, b)] }; }
+function wordSub(a, b){ const nm = pick(NAMES), [w] = pick(THINGS), n = a - b;
+  return { ...sub(a, b), long: true, show: `${nm} has ${a} ${w}. ${nm} gives away ${b}. How many are left?`,
+    ask: [`${nm} has ${a} ${w}.`, `${nm} gives away ${b}.`, `How many ${w} are left?`], sayAnswer: `${nm} has ${n} ${w} left.`,
+    explain: () => [`Giving away means we take away, so we subtract.`, ...explainSub(a, b)] }; }
+function wordMul(a, b){ const [w] = pick(THINGS), n = a * b;
+  return { ...mul(a, b), long: true, show: `${a} bags. ${b} ${w} in each bag. How many in all?`,
+    ask: [`There are ${a} bags.`, `Each bag has ${b} ${w}.`, `How many ${w} are there in all?`], sayAnswer: `There are ${n} ${w} in all.`,
+    explain: () => [`Every bag has the same number, so we multiply.`, ...explainMul(a, b)] }; }
+
+/* Every question remembers how it was made, so it can be repeated later */
+const MK = {};
+function tag(name, f){ const g = (...args) => { const q = f(...args); q.spec = [name, ...args]; return q; }; MK[name] = g; return g; }
+add = tag('add', add); sub = tag('sub', sub); mul = tag('mul', mul); div = tag('div', div); count = tag('count', count);
+after = tag('after', after); before = tag('before', before); tenMore = tag('tenMore', tenMore); half = tag('half', half);
+orderOps = tag('orderOps', orderOps); wordAdd = tag('wordAdd', wordAdd); wordSub = tag('wordSub', wordSub); wordMul = tag('wordMul', wordMul);
+
+/* Question mix for each grade and skill level (1 Starter, 2 Explorer, 3 Champion) */
+function gens(g, L){
+  const by = (...v) => v[L - 1];
+  switch (g){
+    case 'K': { const m = by(5, 8, 10); return [
+      () => count(rnd(3, by(5, 10, 15))),
+      () => after(rnd(1, by(9, 19, 49))),
+      () => { const a = rnd(1, m - 1); return add(a, rnd(1, m - a), true); },
+      () => { const a = rnd(2, m); return sub(a, rnd(1, a - 1), true); } ]; }
+    case '1': { const m = by(10, 15, 20); return [
+      () => { const a = rnd(2, Math.min(10, m - 2)); const b = rnd(1, Math.min(10, m - a)); return add(a, b, a + b <= 10); },
+      () => { const a = rnd(4, m); return sub(a, rnd(1, Math.min(9, a - 1)), a <= 10); },
+      () => { const a = rnd(2, by(5, 8, 10)); return add(a, a); },
+      () => before(rnd(2, by(20, 50, 100))) ]; }
+    case '2': return [
+      () => L === 1 ? add(rnd(10, 40), rnd(2, 9)) : L === 2 ? add(rnd(12, 60), rnd(10, 30)) : add(rnd(25, 70), rnd(15, 29)),
+      () => { const a = rnd(by(20, 30, 50), 99); return sub(a, L === 1 ? rnd(2, 9) : rnd(by(10, 10, 15), Math.min(by(9, 40, 49), a - 5))); },
+      () => tenMore(rnd(11, 89)),
+      () => wordAdd(rnd(5, by(15, 25, 40)), rnd(3, by(9, 20, 30))),
+      () => { const a = rnd(by(10, 15, 25), by(20, 30, 50)); return wordSub(a, rnd(2, by(5, 9, a - 5))); } ];
+    case '3': { const T = by([2, 5, 10], [2, 3, 4, 5, 10], [2, 3, 4, 5, 6, 7, 8, 9, 10]);
+      const fact = () => { const t = pick(T), x = rnd(2, 10); return Math.random() < 0.5 ? mul(x, t) : mul(t, x); };
+      return [ fact, fact, () => div(pick(T), rnd(2, 10)), () => wordMul(rnd(2, by(4, 6, 9)), pick(T)), () => add(rnd(25, 75), rnd(12, by(19, 24, 48))) ]; }
+    case '4': return [
+      () => L === 1 ? mul(rnd(11, 20), rnd(2, 4)) : L === 2 ? mul(rnd(12, 29), rnd(2, 6)) : mul(rnd(21, 49), rnd(3, 9)),
+      () => mul(rnd(by(2, 6, 6), by(10, 12, 12)), rnd(by(2, 6, 7), by(10, 12, 12))),
+      () => div(rnd(by(2, 3, 6), by(5, 9, 12)), rnd(by(2, 3, 6), by(10, 12, 12))),
+      () => add(rnd(1, by(4, 6, 7)) * 100 + rnd(0, 9) * 10, rnd(1, by(2, 3, 2)) * 100 + rnd(1, 9) * 10 + (L === 3 ? rnd(1, 9) : 0)),
+      () => mul(rnd(4, by(30, 99, 99)), L === 3 ? pick([10, 100]) : 10) ];
+    case '5': return [
+      () => L === 1 ? mul(rnd(12, 30), rnd(2, 5)) : L === 2 ? mul(rnd(13, 49), rnd(3, 9)) : mul(rnd(30, 99), rnd(4, 9)),
+      () => L === 1 ? div(rnd(2, 4), rnd(11, 20)) : L === 2 ? div(rnd(2, 5), rnd(11, 24)) : div(rnd(3, 9), rnd(12, 30)),
+      () => orderOps(rnd(2, by(10, 10, 30)), rnd(2, by(5, 6, 9)), rnd(2, by(5, 9, 12))),
+      () => half(2 * rnd(by(10, 10, 50), by(30, 49, 250))),
+      () => mul(rnd(3, by(30, 60, 99)), L === 1 ? 10 : pick([10, 100])),
+      () => L === 1 ? sub(rnd(60, 99), rnd(12, 40)) : L === 2 ? sub(rnd(100, 200), rnd(25, 80)) : sub(rnd(200, 999), rnd(100, 199)) ];
+  }
+}
+function traceRange(g, L){
+  const by = v => v[L - 1];
+  if (g === 'K') return by([[0, 5], [0, 9], [0, 20]]);
+  if (g === '1') return by([[0, 10], [10, 20], [10, 50]]);
+  return by([[10, 50], [50, 100], [100, 999]]);
+}
+function traceTask(n, intro){
+  const objs = n >= 1 && n <= 10 ? { type: 'count', a: n, e: pick(THINGS)[1] } : null;
+  return { trace: true, answer: n, show: `Trace ${n}`, visual: objs,
+    ask: intro ? [intro, `Start at the green dot, and follow the path with your finger.`]
+               : [`This is the number ${n}.`, `Let’s trace it. Start at the green dot, and follow the path with your finger.`] };
+}
+function makeRound(g, L, act){
+  const list = gens(g, L), out = [], seen = new Set(); let guard = 0;
+  const [lo, hi] = traceRange(g, L);
+  if (act === 'trace'){
+    let bag = [];
+    while (out.length < ROUND){
+      if (!bag.length){ for (let n = lo; n <= hi; n++) bag.push(n); bag.sort(() => Math.random() - 0.5); if (bag.length > ROUND) bag.length = ROUND; }
+      out.push(traceTask(bag.pop()));
+    }
+    return out;
+  }
+  const spoken = act === 'mix' ? ROUND - 3 : ROUND;
+  while (out.length < spoken && guard++ < 300){ const q = pick(list)(); const key = q.show + q.answer; if (seen.has(key)) continue; seen.add(key); out.push(q); }
+  if (act === 'mix'){
+    [2, 5, 8].forEach(pos => {
+      const n = out[pos - 1].answer;
+      out.splice(pos, 0, n <= Math.max(hi, 20) ? traceTask(n, `Now let’s write the answer, ${n}.`) : traceTask(rnd(lo, hi)));
+    });
+  }
+  return out;
+}
+
+traceTask = tag('traceTask', traceTask);
+
+/* ---------- Repetition: tricky questions come back until they stick ---------- */
+const bankKey = () => `bank:${state.grade}`;
+const specKey = spec => JSON.stringify(spec);
+const plainSpec = spec => spec && spec[0] === 'traceTask' ? spec.slice(0, 2) : spec;
+function getBank(){ try { return JSON.parse(store.get(bankKey())) || []; } catch(e){ return []; } }
+function setBank(b){ store.set(bankKey(), JSON.stringify(b.slice(-20))); }
+function bankAdd(spec){
+  spec = plainSpec(spec); if (!spec) return;
+  const b = getBank(), f = b.find(x => specKey(x.spec) === specKey(spec));
+  if (f) f.hits = 0; else b.push({ spec, hits: 0 }); setBank(b);
+}
+function bankResult(q, ok){
+  const spec = plainSpec(q.spec); if (!spec) return;
+  const b = getBank(), i = b.findIndex(x => specKey(x.spec) === specKey(spec)); if (i < 0) return;
+  if (ok){ b[i].hits++; if (b[i].hits >= 2) b.splice(i, 1); } else b[i].hits = 0;
+  setBank(b);
+}
+function rebuild(spec, extra){ const q = MK[spec[0]](...spec.slice(1)); return Object.assign(q, extra || {}); }
+function buildRound(){
+  const qs = makeRound(state.grade, state.level, state.activity);
+  const bank = getBank().filter(x => state.activity === 'mix' || (state.activity === 'trace') === (x.spec[0] === 'traceTask'));
+  const used = new Set(); let start = 1;
+  for (const item of bank.slice(0, 3)){
+    const isT = item.spec[0] === 'traceTask';
+    const i = qs.findIndex((q, k) => k >= start && !used.has(k) && !!q.trace === isT);
+    if (i < 0) continue; used.add(i); qs[i] = rebuild(item.spec, { review: true }); start = i + 2;
+  }
+  return qs;
+}
+function scheduleReview(q){
+  if (q.missLogged) return; q.missLogged = true;
+  if (!q.spec) return;
+  bankAdd(q.spec); if (!q.extra) state.missed.push(plainSpec(q.spec));
+  if (state.extras < 4){
+    state.extras++;
+    state.qs.splice(Math.min(state.i + 3, state.qs.length), 0, rebuild(plainSpec(q.spec), { extra: true, review: true }));
+    renderBar();
+  }
+}
+
+/* ---------- Setup screen ---------- */
+const GRADES = [['K','Kindergarten'],['1','Grade 1'],['2','Grade 2'],['3','Grade 3'],['4','Grade 4'],['5','Grade 5']];
+const levelOf = n => LEVELS[n - 1];
+const recKey = () => `best:${state.grade}:${state.level}:${state.activity}`;
+function getBest(){ try { return JSON.parse(store.get(recKey())) || null; } catch(e){ return null; } }
+
+function renderSetup(){
+  const gb = $('grades'); gb.innerHTML = '';
+  GRADES.forEach(([g, label]) => {
+    const b = document.createElement('button'); b.className = 'grade'; b.setAttribute('role', 'radio');
+    b.setAttribute('aria-checked', String(state.grade === g)); b.innerHTML = `<b>${g}</b><span>${label}</span>`;
+    b.onclick = () => { state.grade = g; store.set('grade', g); renderSetup(); };
+    gb.append(b);
+  });
+  const lb = $('levels'); lb.innerHTML = '';
+  LEVELS.forEach(l => {
+    const b = document.createElement('button'); b.className = 'level'; b.setAttribute('role', 'radio');
+    b.setAttribute('aria-checked', String(state.level === l.n));
+    b.innerHTML = `<span class="em" aria-hidden="true">${l.em}</span><span><b>Level ${l.n}: ${l.name}</b><span>${l.desc}</span></span>`;
+    b.onclick = () => { state.level = l.n; store.set('level', l.n); renderSetup(); };
+    lb.append(b);
+  });
+  const gl = $('goals'); gl.innerHTML = '';
+  GOALS.forEach(o => {
+    const b = document.createElement('button'); b.setAttribute('aria-pressed', String(state.goal === o.id));
+    b.innerHTML = `<span class="em" aria-hidden="true">${o.em}</span>${o.name}<small>${goalFor(state.grade, state.level, o.id)} seconds</small>`;
+    b.onclick = () => { state.goal = o.id; store.set('goal', o.id); renderSetup(); };
+    gl.append(b);
+  });
+  const ab = $('acts'); ab.innerHTML = '';
+  ACTS.forEach(a => {
+    const b = document.createElement('button'); b.setAttribute('aria-pressed', String(state.activity === a.id));
+    b.innerHTML = `<span class="em" aria-hidden="true">${a.em}</span>${a.name}<small>${a.desc}</small>`;
+    b.onclick = () => { state.activity = a.id; store.set('activity', a.id); renderSetup(); };
+    ab.append(b);
+  });
+  const noGoal = state.activity === 'trace'; $('goals').hidden = noGoal; $('goalHead').hidden = noGoal;
+  document.querySelectorAll('#speeds button').forEach(b => b.setAttribute('aria-pressed', String(parseFloat(b.dataset.rate) === state.rate)));
+  $('soundBtn').textContent = state.sound ? '🎉 Claps and sounds: on' : '🔇 Claps and sounds: off';
+  $('autoBtn').textContent = state.autoListen ? '🎤 Listen without tapping: on' : '🎤 Listen without tapping: off';
+  const best = getBest(), lv = levelOf(state.level);
+  $('recordNote').textContent = best ? `Your best on ${GRADES.find(x => x[0] === state.grade)[1]}, ${lv.name}: ⭐ ${best.stars} of ${ROUND}${best.avg ? `, average ${best.avg.toFixed(1)}s` : ''}` : '';
+}
+document.querySelectorAll('#speeds button').forEach(b => b.onclick = () => { state.rate = parseFloat(b.dataset.rate); store.set('rate', state.rate); renderSetup(); say(['This is how fast I will talk.']); });
+$('voice').onchange = e => { state.voice = voices[e.target.value]; store.set('voice2', state.voice.name); updateVoiceTip(); say(['Hi there! I’m your math helper.']); };
+$('testVoice').onclick = () => say(['Hi! I will read every question slowly and clearly.', 'What is 2 plus 3?']);
+$('soundBtn').onclick = () => { state.sound = !state.sound; store.set('sound', state.sound ? 'on' : 'off'); renderSetup(); if (state.sound){ chime(); applause(0.8, 5); } };
+
+$('autoBtn').onclick = () => { state.autoListen = !state.autoListen; store.set('auto', state.autoListen ? 'on' : 'off'); renderSetup(); };
+
+/* ---------- Play screen ---------- */
+function show(id){ if (id !== 'play') abortRec(); ['setup', 'play', 'done'].forEach(s => $(s).hidden = s !== id); window.scrollTo(0, 0); }
+const cur = () => state.qs[state.i];
+
+function renderVisual(v){
+  const box = $('visual'); box.innerHTML = '';
+  if (!v){ box.hidden = true; return; } box.hidden = false;
+  const group = (n, e, goneFrom) => { const g = document.createElement('div'); g.className = 'grp';
+    for (let i = 0; i < n; i++){ const s = document.createElement('span'); s.textContent = e; if (goneFrom !== undefined && i >= goneFrom) s.className = 'gone'; g.append(s); } return g; };
+  const op = t => { const s = document.createElement('span'); s.className = 'op'; s.textContent = t; return s; };
+  if (v.type === 'count') box.append(group(v.a, v.e));
+  if (v.type === 'add') box.append(group(v.a, v.e), op('+'), group(v.b, v.e));
+  if (v.type === 'sub') box.append(group(v.a, v.e, v.a - v.b));
+}
+function renderBar(){
+  $('qnum').textContent = `Question ${Math.min(state.i + 1, state.qs.length)} of ${state.qs.length}`;
+  $('stars').textContent = `⭐ ${state.score}`;
+  $('streak').hidden = state.streak < 2; $('streak').textContent = `🔥 ${state.streak}`;
+}
+function renderQuestion(){
+  const q = cur(); abortRec(); state.tries = 0; state.answered = false; state.timing = false; timerReset();
+  state.echo = false; state.waitStart = 0; state.nudged = false; state.misheard = 0; $('redo').hidden = true;
+  renderBar();
+  $('prog').style.width = `${state.i / state.qs.length * 100}%`;
+  const lv = levelOf(state.level);
+  const tr = !!q.trace;
+  $('levelTag').textContent = (q.review ? '🔁 Practice again · ' : '') + (tr ? `${lv.em} ${lv.name} · tracing` : `${lv.em} ${lv.name} · speed goal ${goalSec()}s`);
+  $('qtext').textContent = tr ? `Trace the number ${q.answer}` : q.show; $('qtext').classList.toggle('long', !!(q.long || tr));
+  renderVisual(q.visual); $('visual').classList.toggle('small', tr);
+  $('trace').hidden = !tr; $('clock').hidden = tr;
+  $('feedback').hidden = true; $('heard').textContent = ''; $('caption').textContent = '';
+  $('next').hidden = true; $('next').textContent = state.i === state.qs.length - 1 ? 'See my results 🎉' : 'Next question';
+  padVal = ''; updatePad(); updateMic(); drawClock();
+  if (tr) setupTrace(q.answer); else T.strokes = [];
+}
+/* Reads the question; the clock only runs while the child is thinking, never while the owl talks */
+async function askAloud(prefix = []){
+  const q = cur(); timerPause();
+  const ok = await say([...prefix, ...q.ask]);
+  if (ok && q === cur() && !state.answered){ if (q.trace){ if (!T.demoed) runDemo(); } else { state.timing = true; timerRun(); state.waitStart = performance.now(); } }
+}
+async function talk(lines){
+  timerPause(); const ok = await say(lines);
+  if (ok && state.timing && !state.answered) timerRun();
+}
+
+function updateMic(){
+  const m = $('mic');
+  const tr = !!(cur() && cur().trace);
+  m.hidden = state.micBlocked || tr; $('typeToggle').hidden = state.micBlocked || tr;
+  if (tr){ $('pad').hidden = true; $('typeToggle').textContent = 'Type the answer instead'; }
+  else if (state.micBlocked) $('pad').hidden = false;
+  const hearing = state.listening || (listenWanted && state.autoListen && !state.speaking);
+  m.disabled = state.speaking || (state.answered && !state.echo);
+  m.classList.toggle('listening', hearing);
+  $('micLabel').textContent = state.speaking ? 'Listen first…' : hearing ? 'I’m listening… just say your answer' : state.autoListen ? 'Tap if I stop listening' : 'Tap and say your answer';
+  document.querySelectorAll('#keys button').forEach(b => b.disabled = state.answered);
+}
+
+function showFeedback(kind, title, steps, chip){
+  const f = $('feedback'); f.className = `feedback ${kind}`; f.hidden = false; f.innerHTML = '';
+  const p = document.createElement('p'); p.className = 'fb-title'; p.textContent = title; f.append(p);
+  if (chip){ const c = document.createElement('span'); c.className = 'speedchip'; c.textContent = chip; f.append(c); }
+  if (steps){ const ol = document.createElement('ol'); steps.forEach(s => { const li = document.createElement('li'); li.textContent = s; ol.append(li); }); f.append(ol); }
+}
+
+const PRAISE = ['Great job!', 'You got it!', 'Super!', 'Yes, that’s right!', 'Brilliant!', 'Well done!', 'Amazing!', 'Fantastic!'];
+function celebrate(){
+  const s = state.streak, big = s > 0 && s % 5 === 0, mid = s >= 3;
+  burst(big ? 1.8 : mid ? 1.25 : 1);
+  chime(big || mid);
+  applause(big ? 2.4 : mid ? 1.8 : 1.3, big ? 14 : mid ? 10 : 7);
+  animate($('owl'), 'hop'); animate($('qcard'), 'win'); animate($('stars'), 'bump');
+  if (s >= 2) animate($('streak'), 'bump');
+}
+async function echoCheck(n){
+  const q = cur(); state.echo = false; abortRec(); updateMic(); $('heard').textContent = `You said ${n}`;
+  if (n === q.answer){ chime(false); burst(0.5); animate($('owl'), 'hop'); await say([`Yes! ${q.sayAnswer}`, `Now you know it. We’ll practice it again soon.`]); }
+  else await say([`Almost. ${q.sayAnswer}`, `We’ll practice it again soon.`]);
+}
+async function check(n, answeredAt){
+  if (state.echo) return echoCheck(n);
+  if (state.answered) return;
+  const q = cur(); $('heard').textContent = `You said ${n}`;
+  if (n === q.answer){
+    const t = timerSec(answeredAt); timerPause(); drawClock();
+    state.answered = true; state.timing = false; state.streak++; state.bestStreak = Math.max(state.bestStreak, state.streak);
+    const first = !q.done; q.done = true;
+    if (first && !q.extra && !q.missLogged) state.score++;
+    if (first && q.extra) state.fixed++;
+    if (q.review) bankResult(q, state.tries === 0);
+    const g = goalSec(), r = speedRating(t, g); if (first && !q.extra){ state.times.push(t); if (r.met) state.goalsMet++; }
+    renderBar(); celebrate();
+    const p = pick(PRAISE);
+    showFeedback('good', `${p} ${q.sayAnswer}`, null, `${r.em} ${r.name} · ${t.toFixed(1)}s${r.met ? ` · beat the ${g}s goal` : ''}`);
+    $('next').hidden = false; $('redo').hidden = false; updateMic();
+    const lines = [p, q.sayAnswer];
+    if (r.em === '⚡') lines.push('That was lightning fast!'); else if (r.met) lines.push('You beat the clock!');
+    if (state.streak === 3) lines.push('Three in a row!');
+    else if (state.streak > 0 && state.streak % 5 === 0) lines.push(`${state.streak} in a row! You’re on fire!`);
+    await sleep(reduceMotion ? 200 : 900);
+    if (q === cur()) await say(lines);
+  } else if (state.tries === 0){
+    state.tries = 1; state.streak = 0; renderBar(); padVal = ''; updatePad();
+    boop(); animate($('owl'), 'tilt');
+    showFeedback('try', `Not quite. Let’s try once more.`);
+    await askAloud([`Not quite. You said ${n}.`, `Let’s listen to the question again.`]);
+  } else {
+    timerPause(); state.answered = true; state.timing = false; state.streak = 0; renderBar();
+    boop(); animate($('owl'), 'tilt');
+    const ex = q.explain(); scheduleReview(q); if (q.review) bankResult(q, false);
+    showFeedback('bad', `The answer is ${q.answer}.`, ex); $('next').hidden = false; $('redo').hidden = false; updateMic();
+    const ok = await say([`Good try! You said ${n}.`, `The answer is ${q.answer}.`, `Let’s see why.`, ...ex]);
+    if (ok && q === cur()){ state.echo = true; updateMic(); await say([`Now it’s your turn.`, ...q.ask]); }
+  }
+}
+
+/* Listens on its own after every question; tapping the button is optional */
+let rec = null, listenWanted = false, restartTimer = 0;
+const REPEAT_WORDS = /\b(again|repeat|say it|what|pardon|sorry|huh|one more time)\b/i;
+function canListen(){
+  const q = cur();
+  return !state.micBlocked && !$('play').hidden && !!q && !q.trace && (!state.answered || state.echo);
+}
+function abortRec(){
+  clearTimeout(restartTimer); listenWanted = false;
+  if (rec){ const r = rec; rec = null; try { r.abort(); } catch(e){} }
+  state.listening = false;
+}
+function queueListen(){
+  if (!state.autoListen || !canListen()) return;
+  listenWanted = true; clearTimeout(restartTimer);
+  restartTimer = setTimeout(() => listen(false), 250); updateMic();
+}
+function patienceCheck(){
+  if (!state.timing || state.nudged || !state.waitStart) return;
+  if ((performance.now() - state.waitStart) / 1000 > Math.max(25, goalSec() * 3)){
+    state.nudged = true;
+    talk([`Take your time. I’m still listening.`, `If you want to hear the question again, just say “again”.`]);
+  }
+}
+function listen(manual){
+  manual = manual !== false;
+  if (state.micBlocked || state.speaking || rec || !canListen()) return;
+  audio(); clearTimeout(restartTimer);
+  if (manual) listenWanted = state.autoListen;
+  const r = new SR(); rec = r;
+  r.lang = (navigator.language || '').toLowerCase().startsWith('en') ? navigator.language : 'en-US';
+  r.interimResults = false; r.maxAlternatives = 5; r.continuous = false;
+  let spokeAt = null;
+  const stopHere = () => { rec = null; try { r.abort(); } catch(e){} state.listening = false; };
+  r.onspeechend = () => { spokeAt = performance.now(); };
+  r.onresult = e => {
+    const alts = Array.from(e.results[e.results.length - 1]).map(x => x.transcript);
+    let n = null, heard = alts[0] || '';
+    for (const t of alts){ const v = parseNumber(t); if (v !== null){ n = v; heard = t; break; } }
+    if (n !== null){ stopHere(); listenWanted = false; check(n, spokeAt || performance.now()); return; }
+    $('heard').textContent = heard ? `I heard “${heard}”` : '';
+    if (alts.some(t => REPEAT_WORDS.test(t))){ stopHere(); if (state.echo) say(cur().ask); else askAloud(); return; }
+    state.misheard++;
+    if (state.misheard === 2){ stopHere(); talk([`I’m listening for a number. Take your time.`]); }
+  };
+  r.onerror = e => {
+    if (['not-allowed', 'service-not-allowed', 'audio-capture'].includes(e.error)){
+      rec = null; listenWanted = false; state.listening = false; state.micBlocked = true; updateMic();
+      talk([`I can’t use the microphone here, so let’s use the number keys.`]);
+    }
+  };
+  r.onend = () => {
+    if (rec !== r) return;
+    rec = null; state.listening = false;
+    if (listenWanted && canListen() && !state.speaking){ patienceCheck(); if (!state.speaking) restartTimer = setTimeout(() => listen(false), 300); }
+    updateMic();
+  };
+  try { r.start(); state.listening = true; } catch (err){ rec = null; state.listening = false; }
+  updateMic();
+}
+
+/* ---------- Number pad ---------- */
+let padVal = '';
+function updatePad(){ $('padShow').textContent = padVal || ' '; }
+function padPress(k){
+  if (state.answered || $('play').hidden || (cur() && cur().trace)) return;
+  if (k === '⌫') padVal = padVal.slice(0, -1);
+  else if (k === '✓'){ if (padVal){ const at = performance.now(); stopTalking(); check(parseInt(padVal, 10), at); } return; }
+  else if (padVal.length < 4) padVal += k;
+  updatePad();
+}
+['1','2','3','4','5','6','7','8','9','⌫','0','✓'].forEach(k => {
+  const b = document.createElement('button'); b.textContent = k;
+  if (k === '✓'){ b.className = 'ok'; b.setAttribute('aria-label', 'Check answer'); }
+  if (k === '⌫') b.setAttribute('aria-label', 'Delete');
+  b.onclick = () => padPress(k); $('keys').append(b);
+});
+document.addEventListener('keydown', e => {
+  if ($('play').hidden || e.target.tagName === 'SELECT' || (cur() && cur().trace && e.key !== 'Enter')) return;
+  if (/^[0-9]$/.test(e.key)){ if ($('pad').hidden) $('typeToggle').click(); padPress(e.key); }
+  else if (e.key === 'Backspace') padPress('⌫');
+  else if (e.key === 'Enter'){ if (state.answered && !$('next').hidden) $('next').click(); else padPress('✓'); }
+});
+
+/* ---------- Tracing ---------- */
+const arcPts = (cx, cy, rx, ry, a0, a1, n = 36) => { const p = []; for (let i = 0; i <= n; i++){ const a = (a0 + (a1 - a0) * i / n) * Math.PI / 180; p.push([cx + rx * Math.cos(a), cy + ry * Math.sin(a)]); } return p; };
+const quadPts = (p0, c, p1, n = 16) => { const p = []; for (let i = 0; i <= n; i++){ const t = i / n, u = 1 - t; p.push([u * u * p0[0] + 2 * u * t * c[0] + t * t * p1[0], u * u * p0[1] + 2 * u * t * c[1] + t * t * p1[1]]); } return p; };
+/* Each digit is drawn in a 0.6 × 1 box, as the strokes a child is taught to write, in order */
+const DIGITS = {
+  0: [arcPts(0.3, 0.5, 0.27, 0.46, -90, -450, 48)],
+  1: [[[0.13, 0.2], [0.3, 0.04], [0.3, 0.96]]],
+  2: [[...arcPts(0.3, 0.29, 0.25, 0.24, 200, 400, 28), [0.04, 0.96], [0.57, 0.96]]],
+  3: [[...arcPts(0.28, 0.27, 0.24, 0.23, 205, 450, 28), ...arcPts(0.28, 0.73, 0.27, 0.23, 270, 515, 28).slice(1)]],
+  4: [[[0.42, 0.04], [0.04, 0.68], [0.58, 0.68]], [[0.42, 0.04], [0.42, 0.96]]],
+  5: [[[0.1, 0.04], [0.08, 0.45], ...arcPts(0.3, 0.68, 0.27, 0.28, 226, 510, 30)], [[0.1, 0.04], [0.54, 0.04]]],
+  6: [[...quadPts([0.5, 0.05], [0.06, 0.2], [0.05, 0.72]), ...arcPts(0.31, 0.72, 0.26, 0.24, 180, -180, 36).slice(1)]],
+  7: [[[0.03, 0.04], [0.57, 0.04], [0.2, 0.96]]],
+  8: [Array.from({ length: 61 }, (_, i) => { const t = i / 60; return [0.3 - 0.25 * Math.sin(4 * Math.PI * t), 0.5 - 0.46 * Math.cos(2 * Math.PI * t)]; })],
+  9: [[...arcPts(0.3, 0.29, 0.25, 0.25, -20, -380, 36), [0.55, 0.96]]]
+};
+const T = { ctx: null, cv: $('traceCv'), w: 0, h: 0, strokes: [], pts: [], ink: [], tol: 20, scale: 100, drawing: false,
+  off: 0, samples: 0, demo: null, demoing: false, demoed: false, fails: 0, done: false };
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+function setupTrace(n){
+  const cv = T.cv, d = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
+  cv.width = w * d; cv.height = h * d; T.ctx = cv.getContext('2d'); T.ctx.setTransform(d, 0, 0, d, 0, 0); T.w = w; T.h = h;
+  const digits = String(n).split(''), gap = 0.2, totalW = digits.length * 0.6 + (digits.length - 1) * gap;
+  const scale = Math.min(h - 50, (w - 40) / totalW); T.scale = scale;
+  const ox = (w - totalW * scale) / 2, oy = (h - scale) / 2, step = Math.max(4, scale * 0.025);
+  T.strokes = [];
+  digits.forEach((ch, i) => DIGITS[ch].forEach(st => {
+    const raw = st.map(([x, y]) => [ox + (x + i * (0.6 + gap)) * scale, oy + y * scale]), out = [raw[0]];
+    for (let j = 1; j < raw.length; j++){
+      const [x0, y0] = raw[j - 1], [x1, y1] = raw[j], k = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / step));
+      for (let m = 1; m <= k; m++) out.push([x0 + (x1 - x0) * m / k, y0 + (y1 - y0) * m / k]);
+    }
+    T.strokes.push(out);
+  }));
+  T.pts = []; T.strokes.forEach((st, s) => st.forEach(p => T.pts.push({ x: p[0], y: p[1], s, c: false })));
+  T.tol = Math.max(16, scale * 0.11); T.ink = []; T.off = 0; T.samples = 0; T.done = false; T.demoed = false; T.demoing = false; T.demo = null; T.fails = 0;
+  drawTrace();
+}
+function pathLine(c, pts){
+  if (!pts.length) return;
+  if (pts.length === 1){ c.beginPath(); c.arc(pts[0][0], pts[0][1], c.lineWidth / 2, 0, Math.PI * 2); c.fill(); return; }
+  c.beginPath(); c.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) c.lineTo(pts[i][0], pts[i][1]); c.stroke();
+}
+function drawTrace(){
+  const c = T.ctx; if (!c) return;
+  c.clearRect(0, 0, T.w, T.h); c.lineCap = 'round'; c.lineJoin = 'round';
+  const lw = T.scale * 0.15, col = { line: cssVar('--line'), card: cssVar('--card'), soft: cssVar('--soft'), mint: cssVar('--mint'), grape: cssVar('--grape'), good: cssVar('--good'), sun: cssVar('--sun') };
+  c.strokeStyle = col.line; c.lineWidth = lw + 8; T.strokes.forEach(st => pathLine(c, st));
+  c.strokeStyle = col.card; c.lineWidth = lw; T.strokes.forEach(st => pathLine(c, st));
+  c.strokeStyle = col.mint; c.fillStyle = col.mint;
+  T.strokes.forEach((_, s) => { let run = []; T.pts.forEach(p => { if (p.s !== s) return; if (p.c) run.push([p.x, p.y]); else { if (run.length > 1) pathLine(c, run); run = []; } }); if (run.length > 1) pathLine(c, run); });
+  if (!T.done){ c.setLineDash([2, 12]); c.strokeStyle = col.soft; c.lineWidth = 3; T.strokes.forEach(st => pathLine(c, st)); c.setLineDash([]); }
+  T.strokes.forEach((st, s) => {
+    const ps = T.pts.filter(p => p.s === s); if (T.done || ps.filter(p => p.c).length / ps.length > 0.7) return;
+    const [x, y] = st[0], k = Math.min(st.length - 1, Math.max(3, Math.round(st.length * 0.12))), [ax, ay] = st[k], ang = Math.atan2(ay - y, ax - x);
+    c.fillStyle = col.good; c.beginPath(); c.arc(x, y, lw * 0.45, 0, Math.PI * 2); c.fill();
+    if (T.strokes.length > 1){ c.fillStyle = col.card; c.font = `600 ${Math.round(lw * 0.5)}px Fredoka, system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(s + 1), x, y + 1); }
+    const a = lw * 0.32; c.save(); c.translate(ax, ay); c.rotate(ang); c.fillStyle = col.good; c.beginPath(); c.moveTo(a, 0); c.lineTo(-a * 0.7, -a * 0.8); c.lineTo(-a * 0.7, a * 0.8); c.closePath(); c.fill(); c.restore();
+  });
+  c.globalAlpha = 0.85; c.strokeStyle = col.grape; c.fillStyle = col.grape; c.lineWidth = lw * 0.45; T.ink.forEach(st => pathLine(c, st)); c.globalAlpha = 1;
+  if (T.demo){
+    const k = Math.floor(T.demo.i), cur = T.pts[k];
+    c.strokeStyle = col.sun; c.fillStyle = col.sun; c.lineWidth = lw * 0.45;
+    for (let s = 0; s <= cur.s; s++) pathLine(c, T.pts.slice(0, k + 1).filter(p => p.s === s).map(p => [p.x, p.y]));
+    c.shadowColor = col.sun; c.shadowBlur = 18; c.beginPath(); c.arc(cur.x, cur.y, lw * 0.4, 0, Math.PI * 2); c.fill(); c.shadowBlur = 0;
+    c.font = `${Math.round(lw * 0.9)}px system-ui, sans-serif`; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('👆', cur.x, cur.y + lw * 0.35);
+  }
+}
+function segDist(px, py, a, b){
+  const dx = b[0] - a[0], dy = b[1] - a[1], L = dx * dx + dy * dy;
+  const t = L ? Math.max(0, Math.min(1, ((px - a[0]) * dx + (py - a[1]) * dy) / L)) : 0;
+  return Math.hypot(px - a[0] - t * dx, py - a[1] - t * dy);
+}
+function traceHit(a, b){
+  let near = Infinity;
+  for (const p of T.pts){ if (segDist(p.x, p.y, a, b) <= T.tol) p.c = true; near = Math.min(near, Math.hypot(p.x - b[0], p.y - b[1])); }
+  T.samples++; if (near > T.tol * 1.9) T.off++;
+}
+function clearTrace(){ T.ink = []; T.off = 0; T.samples = 0; T.pts.forEach(p => p.c = false); drawTrace(); }
+function traceCheck(end){
+  if (T.done) return;
+  const cov = T.pts.filter(p => p.c).length / T.pts.length;
+  const each = T.strokes.every((_, s) => { const ps = T.pts.filter(p => p.s === s); return ps.filter(p => p.c).length / ps.length >= 0.75; });
+  if (cov >= 0.88 && each){ T.done = true; T.drawing = false; drawTrace(); traceDone(); return; }
+  if (end && T.samples > 25 && T.off / T.samples > 0.45){
+    T.fails++; clearTrace(); boop(); animate($('owl'), 'tilt');
+    talk([`Oops! Let’s stay on the path.`, `Start again at the green dot.`]);
+    if (T.fails >= 2){ $('next').hidden = false; $('next').textContent = 'Skip for now'; }
+  }
+}
+function runDemo(){
+  if (T.demoing || !T.pts.length || T.done) return;
+  T.demoing = true; T.demoed = true; T.demo = { i: 0 };
+  const stepFn = () => {
+    if (!T.demoing){ T.demo = null; drawTrace(); return; }
+    T.demo.i += reduceMotion ? 3 : 0.6;
+    if (T.demo.i >= T.pts.length){ T.demoing = false; T.demo = null; drawTrace(); return; }
+    drawTrace(); requestAnimationFrame(stepFn);
+  };
+  requestAnimationFrame(stepFn);
+}
+async function traceDone(){
+  const q = cur(); if (state.answered) return;
+  state.answered = true; const first = !q.done; q.done = true;
+  if (first && !q.extra && !q.missLogged){ state.score++; state.traced++; }
+  if (first && q.extra) state.fixed++;
+  if (q.review) bankResult(q, T.fails === 0);
+  state.streak++; state.bestStreak = Math.max(state.bestStreak, state.streak);
+  renderBar(); celebrate();
+  const p = pick(PRAISE);
+  showFeedback('good', `${p} You wrote ${q.answer}!`); $('redo').hidden = false;
+  $('next').hidden = false; $('next').textContent = state.i === state.qs.length - 1 ? 'See my results 🎉' : 'Next question'; updateMic();
+  const lines = [p, `You wrote the number ${q.answer}.`];
+  if (state.streak === 3) lines.push('Three in a row!');
+  else if (state.streak > 0 && state.streak % 5 === 0) lines.push(`${state.streak} in a row! You’re on fire!`);
+  await sleep(reduceMotion ? 200 : 900);
+  if (q === cur()) await say(lines);
+}
+(function wireTracing(){
+  const cv = T.cv, pos = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  cv.addEventListener('pointerdown', e => {
+    const q = cur(); if (!q || !q.trace || state.answered || T.done) return;
+    if (T.demoing){ T.demoing = false; T.demo = null; }
+    audio(); e.preventDefault(); cv.setPointerCapture(e.pointerId); T.drawing = true;
+    const p = pos(e); T.ink.push([p]); traceHit(p, p); drawTrace();
+  });
+  cv.addEventListener('pointermove', e => {
+    if (!T.drawing) return; e.preventDefault();
+    const st = T.ink[T.ink.length - 1], a = st[st.length - 1], p = pos(e);
+    if (Math.hypot(p[0] - a[0], p[1] - a[1]) < 2) return;
+    st.push(p); traceHit(a, p); drawTrace(); traceCheck(false);
+  });
+  const up = () => { if (!T.drawing) return; T.drawing = false; traceCheck(true); };
+  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+  $('showMe').onclick = () => { if (!cur() || !cur().trace || T.done) return; clearTrace(); say([`Watch me. I start at the green dot.`]); runDemo(); };
+  $('clearTrace').onclick = () => { if (!T.done){ T.demoing = false; clearTrace(); } };
+})();
+
+/* ---------- Round flow ---------- */
+$('mic').onclick = listen;
+$('typeToggle').onclick = () => { $('pad').hidden = !$('pad').hidden; $('typeToggle').textContent = $('pad').hidden ? 'Type the answer instead' : 'Hide the number keys'; };
+$('repeat').onclick = () => { if (!state.listening && !state.answered) askAloud(); else if (!state.listening) say(cur().ask); };
+$('next').onclick = () => {
+  stopTalking(); abortRec();
+  const q = cur(); if (q && q.trace && !state.answered) scheduleReview(q);
+  state.i++; if (state.i >= state.qs.length) finish(); else { renderQuestion(); askAloud(); }
+};
+$('redo').onclick = () => { stopTalking(); renderQuestion(); askAloud([`Let’s do this one again.`]); };
+$('restart').onclick = () => { stopTalking(); startRound(state.lastSpecs.map(sp => rebuild(sp))); };
+
+async function startRound(qs, practice){
+  audio(); stopTalking(); abortRec();
+  state.qs = qs || buildRound(); state.practice = !!practice; state.base = state.qs.length; state.lastSpecs = state.qs.map(q => q.spec);
+  state.i = 0; state.score = 0; state.streak = 0; state.bestStreak = 0; state.times = []; state.goalsMet = 0; state.traced = 0;
+  state.fixed = 0; state.missed = []; state.extras = 0; state.echo = false;
+  show('play'); renderQuestion();
+  const lv = levelOf(state.level);
+  const intro = [`Hi there! Let’s practice math together.`, `This is level ${state.level}, ${lv.name}.`];
+  if (state.activity !== 'trace') intro.push(`Try to answer in ${goalSec()} seconds. Watch the rocket!`,
+    state.autoListen && !state.micBlocked ? `When I finish talking, just say your answer. I’ll be listening.` : `When I finish talking, tap the yellow button and say your answer.`);
+  if (state.activity !== 'say') intro.push(`We’ll trace some numbers with our fingers too.`);
+  await askAloud(intro);
+}
+$('start').onclick = () => startRound();
+$('newQuiz').onclick = () => startRound();
+$('again').onclick = () => startRound(state.lastSpecs.map(sp => rebuild(sp)), state.practice);
+$('practice').onclick = () => {
+  const seen = new Set(), specs = state.missed.filter(sp => { const k = specKey(sp); if (seen.has(k)) return false; seen.add(k); return true; });
+  startRound([...specs, ...specs.slice().reverse()].map(sp => rebuild(sp, { review: true })), true);
+};
+$('changeGrade').onclick = () => { stopTalking(); renderSetup(); show('setup'); };
+
+function finish(){
+  $('prog').style.width = '100%'; show('done');
+  abortRec();
+  const s = state.score, g = goalSec(), times = state.times, spokenN = state.qs.filter(q => !q.trace && !q.extra).length, N = state.base, pct = s / N;
+  const avg = times.length ? times.reduce((a, b) => a + b, 0) / times.length : null;
+  const fastest = times.length ? Math.min(...times) : null;
+  const overall = avg !== null ? speedRating(avg, g) : null;
+  const msg = pct >= 0.9 ? 'Amazing work! You are a math star.' : pct >= 0.6 ? 'Great job! You are getting stronger every day.' : 'Good effort! Every try helps your brain grow.';
+  $('doneTitle').textContent = `You got ${s} out of ${N}!`;
+  $('doneText').textContent = state.fixed ? `${msg} You fixed ${state.fixed} tricky ${state.fixed === 1 ? 'one' : 'ones'} on the second go.` : msg;
+  const tricky = new Set(state.missed.map(specKey)).size;
+  $('practice').hidden = !tricky; $('practice').textContent = `🎯 Practice my tricky ${tricky === 1 ? 'one' : 'ones'} (${tricky})`;
+  $('speedBadge').hidden = !overall; if (overall) $('speedBadge').textContent = `${overall.em} Speed rating: ${overall.name}`;
+  const tile = (em, val, label) => `<div class="tile"><span class="em" aria-hidden="true">${em}</span><b>${val}</b><span>${label}</span></div>`;
+  $('tiles').innerHTML =
+    tile('⭐', `${s}/${N}`, 'correct') +
+    (spokenN ? tile('🏁', `${state.goalsMet}/${spokenN}`, `beat the ${g}s goal`) : tile('✏️', state.traced, 'numbers traced')) +
+    tile('⚡', fastest !== null ? `${fastest.toFixed(1)}s` : '–', 'fastest answer') +
+    tile('🔥', state.bestStreak, 'best streak');
+
+  const best = getBest();
+  const isRecord = !state.practice && s > 0 && (!best || s > best.stars || (s === best.stars && avg !== null && (!best.avg || avg < best.avg)));
+  if (isRecord) store.set(recKey(), JSON.stringify({ stars: s, avg }));
+  $('doneRecord').textContent = isRecord ? '🎖️ New personal best!' : best ? `Your best here: ⭐ ${best.stars}${best.avg ? `, average ${best.avg.toFixed(1)}s` : ''}` : '';
+
+  const ready = !state.practice && pct >= 0.8 && (spokenN === 0 || state.goalsMet >= Math.ceil(spokenN * 0.6));
+  const lu = $('levelUp'); lu.hidden = true;
+  if (ready && state.level < 3){
+    const nx = levelOf(state.level + 1); lu.hidden = false; lu.textContent = `Level up to ${nx.em} ${nx.name}`;
+    lu.onclick = () => { state.level++; store.set('level', state.level); startRound(); };
+  } else if (ready && state.grade !== '5'){
+    const ng = GRADES[GRADES.findIndex(x => x[0] === state.grade) + 1]; lu.hidden = false; lu.textContent = `Try ${ng[1]} 🌱`;
+    lu.onclick = () => { state.grade = ng[0]; state.level = 1; store.set('grade', ng[0]); store.set('level', 1); startRound(); };
+  }
+
+  const lines = [`You got ${s} out of ${N}!`];
+  if (state.fixed) lines.push(`You fixed ${state.fixed} tricky ${state.fixed === 1 ? 'one' : 'ones'} on the second go!`);
+  if (tricky) lines.push(`Tap the target button to practice the tricky ones again.`);
+  if (spokenN) lines.push(`You beat the clock ${state.goalsMet} ${state.goalsMet === 1 ? 'time' : 'times'}.`);
+  if (state.traced) lines.push(`You traced ${state.traced} ${state.traced === 1 ? 'number' : 'numbers'}.`);
+  lines.push(msg);
+  if (isRecord) lines.push('That’s a new personal best!');
+  if (ready && !lu.hidden) lines.push('You’re ready for the next level!');
+  if (pct >= 0.6 || isRecord){ burst(pct >= 0.9 || isRecord ? 1.8 : 1.2, $('done')); chime(true); applause(pct >= 0.9 ? 2.6 : 1.8, pct >= 0.9 ? 14 : 9); }
+  setTimeout(() => say(lines), reduceMotion ? 200 : 1000);
+}
+
+/* ---------- Start up ---------- */
+renderSetup();
+window.addEventListener('resize', () => {
+  if (fx.running) sizeFx();
+  const q = cur(); if (q && q.trace && !$('play').hidden && !T.done && T.cv.clientWidth !== T.w) setupTrace(q.answer);
+});
+if (hasTTS){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; } else $('voiceField').hidden = true;
+const notes = [];
+if (!SR) notes.push('This browser can’t listen to voices, so answers will be typed with number keys. Chrome or Safari works best.');
+if (!hasTTS) notes.push('This browser can’t speak out loud, so questions will be shown as text.');
+$('supportNote').textContent = notes.join(' ');
+</script>
+</body>
+</html>
